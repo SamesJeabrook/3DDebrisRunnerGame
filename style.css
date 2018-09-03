@@ -1,0 +1,118 @@
+*{
+    margin:0; padding:0;
+}
+body{
+    font-family: Helvetica, sans-serif;
+}
+.vertical_align{
+    height: 100%;
+    width: 0;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+/* game controls and start */
+
+#gameInto{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0,0,0,0.7);
+    color: #ffffff;
+    text-align: center;
+    /* display: none; */
+}
+
+.game_into_container{
+    vertical-align: middle;
+    display: inline-block;
+    margin: auto;
+}
+.game_into_container li{
+    float: left;
+    width: 200px;
+    list-style: none;
+    text-align: left;
+}
+.game_intro_container__block li{
+    float: none;
+}
+.game_intro_container__block-button{
+    background: none;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 5px 20px;
+    font-size: 20px;
+    margin-top: 20px;
+    transition: 1s;
+}
+.game_intro_container__block-button:hover{
+    background: #fff;
+    color: #333;
+}
+
+/* game over */
+
+#gameOver{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0,0,0,0.7);
+    text-align: center;
+    display: none;
+}
+.game_over_container{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#gameOver h3{
+    color: #ff0000;
+    font-size: 30px;
+}
+
+#gameOver button{
+    background: none;
+    color: #ff0000;
+    font-size: 20px;
+    padding: 5px 15px;
+    border: 1px solid #ff0000;
+    transition: 1s;
+}
+#gameOver button:hover{
+    background: #ff0000;
+    color: #000000;
+}
+
+/* health bar */
+#healthBarContainer{
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #fefefe;
+    padding: 3px 5px;
+}
+#healthBarContainer p{
+    display: inline-block;
+    font-weight: 200;
+}
+#healthBarContainer .health_bar{
+    display: inline-block;
+    width: 500px;
+    height: 40px;
+    vertical-align: middle;
+    background: #3d3d3d
+
+}
+#healthBarContainer .health_bar span{
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    background: #ff0000;
+}
