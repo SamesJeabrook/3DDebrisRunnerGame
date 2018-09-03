@@ -1,0 +1,29 @@
+{
+  "name": "orbitalgame",
+  "version": "1.0.0",
+  "description": "A debris runner game using three.js",
+  "main": "scene.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SamesJeabrook/3DDebrisRunnerGame.git"
+  },
+  "keywords": [
+    "threejs",
+    "react"
+  ],
+  "author": "samesJeabrook",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SamesJeabrook/3DDebrisRunnerGame/issues"
+  },
+  "homepage": "https://github.com/SamesJeabrook/3DDebrisRunnerGame#readme",
+  "dependencies": {
+    "react": "^16.4.2"
+  },
+  "devDependencies": {
+    "express": "^4.16.3"
+  }
+}
