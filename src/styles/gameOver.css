@@ -1,0 +1,33 @@
+/* game over */
+#gameOver{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0,0,0,0.7);
+    text-align: center;
+    display: none;
+}
+.game_over_container{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#gameOver h3{
+    color: #ff0000;
+    font-size: 30px;
+}
+
+#gameOver button{
+    background: none;
+    color: #ff0000;
+    font-size: 20px;
+    padding: 5px 15px;
+    border: 1px solid #ff0000;
+    transition: 1s;
+}
+#gameOver button:hover{
+    background: #ff0000;
+    color: #000000;
+}

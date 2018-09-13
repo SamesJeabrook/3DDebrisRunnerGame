@@ -4,56 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Orbit World</title>
-
-    <script src="three.min.js"></script>
-    <script src="keyboardState.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <title>React set up</title>
 </head>
 <body>
-    <div id="healthBarContainer">
-        <p>Health</p>
-        <div class="health_bar">
-            <span></span>
-        </div>
-    </div>
-    <div id="gameOver">
-        <div class="game_over_container">
-            <h3>Game Over</h3><br/>
-            <button id="playAgain">Play Again</button>
-        </div>
-        <span class="vertical_align"></span>
-    </div>
-    <div id="gameInto">
-        <div class="game_into_container">
-            <ul>
-                <li>
-                    <div class="game_intro_container__block">
-                        <h2>Controls</h2>
-                        <ul>
-                            <li>Up : &uarr; </li>
-                            <li>Down : &darr;</li>
-                            <li>Left : &larr;</li>
-                            <li>Right : &rarr;</li>
-                            <li>Roll Left : A</li>
-                            <li>Roll Right : D</li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <div class="game_intro_container__block">
-                        <h2>Play</h2>
-                        <button class="game_intro_container__block-button" id="play">
-                            Start
-                        </button>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <span class="vertical_align"></span>
-    </div>
-    <div id="gameWrapper"></div>
+    <div id="app"></div>
+    <script src=dist/bundle.js></script>
 </body>
-<script src="scene.js"></script>
-<!-- <script src="completeGame.js"></script> -->
 </html>
