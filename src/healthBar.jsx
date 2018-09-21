@@ -6,11 +6,12 @@ import './styles/healthBar.css';
 
 class HealthBar extends Component {
     render(){
+        let {health} = this.props;
         return(
             <div id="healthBarContainer">
                 <p>Health</p>
                 <div className="health_bar">
-                    <span></span>
+                    <span style={{"width": `${health}%`}}></span>
                 </div>
             </div>
         )

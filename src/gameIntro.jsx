@@ -1,39 +1,42 @@
 import React, {Component} from 'react';
 
+// components
+
+import QRCode from 'qrcode.react'
+
 // styles
 
 import './styles/gameIntro.css';
 
 class GameIntro extends Component {
     render(){
+
+        let controllerConnected = (isConnected) => {
+            if(isConnected){
+                return(
+                        <div>
+                            <h2>Controller is Connected</h2>
+                            <span>You can now play with your phone</span>
+                        </div>
+                    )
+            }else{
+                return(
+                        <div>
+                            <h2>Control with phone</h2>
+                            <span>Scan the QR code below to connect to the game with your phone and take control</span>
+                            <QRCode level={"L"} fgColor={"#000000"} value={`http://localhost:5050?id=${this.props.id}`} />
+                        </div>
+                    )
+            }
+        }
         return(
             <div id="gameIntro">
-                <div class="game_into_container">
-                    <ul>
-                        <li>
-                            <div class="game_intro_container__block">
-                                <h2>Controls</h2>
-                                <ul>
-                                    <li>Up : &uarr; </li>
-                                    <li>Down : &darr;</li>
-                                    <li>Left : &larr;</li>
-                                    <li>Right : &rarr;</li>
-                                    <li>Roll Left : A</li>
-                                    <li>Roll Right : D</li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="game_intro_container__block">
-                                <h2>Play</h2>
-                                <button class="game_intro_container__block-button" id="play">
-                                    Start
-                                </button>
-                            </div>
-                        </li>
-                    </ul>
+                <div className="game_into_container">
+                    <div className="game_intro_container__block">
+                        {controllerConnected(this.props.controllerConnected)}
+                    </div>
                 </div>
-                <span class="vertical_align"></span>
+                <span className="vertical_align"></span>
             </div>
         )
     }

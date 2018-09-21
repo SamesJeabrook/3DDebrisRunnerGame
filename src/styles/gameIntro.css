@@ -1,6 +1,6 @@
 /* game controls and start */
 
-#gameInto{
+#gameIntro{
     position: absolute;
     top: 0;
     left: 0;
@@ -16,15 +16,18 @@
     vertical-align: middle;
     display: inline-block;
     margin: auto;
+    width: 300px;
+    text-align: center;
 }
-.game_into_container li{
-    float: left;
-    width: 200px;
-    list-style: none;
-    text-align: left;
+
+.game_intro_container__block span{
+    font-size: 12px;
+    padding: 10px 0;
+    display: inline-block;
 }
-.game_intro_container__block li{
-    float: none;
+.game_intro_container__block canvas{
+    padding: 10px;
+    background: #fff;
 }
 .game_intro_container__block-button{
     background: none;

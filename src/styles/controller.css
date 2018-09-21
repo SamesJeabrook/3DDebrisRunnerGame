@@ -1,0 +1,28 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background: #8292ad;
+}
+
+p{
+    color: #fff;
+    width: 100%;
+    margin-top: 50px;
+    font-size: 20px;
+    text-align: center;
+    font-family: Helvetica, sans-serif;
+    font-weight: 200;
+}
+
+.controller-wrapper{
+    position: absolute;
+    bottom: 100px;
+}
+.controller-wrapper.left{
+    left: 150px;
+}
+.controller-wrapper.right{
+    right: 150px;
+}
