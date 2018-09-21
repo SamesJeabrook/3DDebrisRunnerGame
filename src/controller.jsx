@@ -74,13 +74,13 @@ class Controller extends Component {
                 <div className="controller-wrapper left">
                     <ReactNipple
                         options={{ mode: 'static', lockY:true, multitouch: true,  position: { bottom: '10%', left: '20%' } }}
-                        onMove={(evt, data) => this.setControllerStateLeftRight(data.distance, data.direction.x)}
+                        onMove={(evt, data) => this.setControllerStateUpDown(data.distance, data.direction.y)}
                     />
                 </div>
                 <div className="controller-wrapper right">
                     <ReactNipple 
                         options={{ mode: 'static', lockX:true, multitouch: true, position: { bottom: '10%', right: '20%' } }}
-                        onMove={(evt, data) => this.setControllerStateUpDown(data.distance, data.direction.y)}
+                        onMove={(evt, data) => this.setControllerStateLeftRight(data.distance, data.direction.x)}
                     />
                 </div>
                 <HealthBar health={this.props.health}/>
