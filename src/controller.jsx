@@ -90,6 +90,7 @@ class Controller extends Component {
                     <ReactNipple 
                         options={{ mode: 'static', lockX:true, multitouch: true, position: { bottom: '10%', right: '20%' } }}
                         onMove={(evt, data) => this.setControllerStateLeftRight(data.distance, data.direction.x)}
+                        onEnd={(evt, data) => console.log(data)}
                     />
                 </div>
                 <HealthBar health={this.props.health}/>

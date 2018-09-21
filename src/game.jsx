@@ -293,29 +293,29 @@ class Game extends Component {
         rollingGroundSphere.rotation.x += rollingSpeed;
         
         var delta = clock.getDelta();
-        var movingDistance = 5 * delta;
+        var movingDistance = delta;
 
         let {controllerState} = this.props;
         if(controllerState.directionX == 'left'){
             if(hero.position.x > -6){
-                hero.position.x -= movingDistance + (controllerState.distanceX/100)
+                hero.position.x -= movingDistance * (controllerState.distanceX/10)
             }
         }
         if(controllerState.directionX == 'right'){
             if(hero.position.x < 6){
-                hero.position.x += movingDistance + (controllerState.distanceX/100)
+                hero.position.x += movingDistance * (controllerState.distanceX/10)
             }
         }
 
         if(controllerState.directionY == 'up'){
             if(hero.position.y < 32){
-                hero.position.y += movingDistance + (controllerState.distanceY/100)
+                hero.position.y += movingDistance * (controllerState.distanceY/10)
             }
         }
 
         if(controllerState.directionY == 'down'){
             if(hero.position.y > 26.5){
-                hero.position.y -= movingDistance + (controllerState.distanceY/100)
+                hero.position.y -= movingDistance * (controllerState.distanceY/10)
             }
         }
         console.log(hero.position)
