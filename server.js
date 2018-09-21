@@ -24,6 +24,11 @@ var express = require('express');
 
         console.log('client connected')
 
+        socket.on('update_health', function(health){
+            console.log(health);
+            io.emit("health_update", health);
+        });
+
         socket.on('game_connect', function(){
             console.log('Game connected!');
 
@@ -31,13 +36,10 @@ var express = require('express');
                 socket: socket,
                 controller_id: undefined
             }
+
+            
         })
         socket.emit("game_connected");
-
-        socket.on('update_health', function(health){
-            console.log(health);
-            socket.emit("health_update", health);
-        })
 
         socket.on('controller_connect', function(game_socket_id){
             if(game_sockets[game_socket_id] && !game_sockets[game_socket_id].controller_id){
@@ -60,6 +62,15 @@ var express = require('express');
                         game_sockets[game_socket_id].socket.emit("controller_state_change", data)
                     }
                 });
+
+                socket.on('update_health', function(health){
+                    console.log(health);
+                    socket.emit("health_update", health);
+                    if(game_sockets[game_socket_id] && !game_sockets[game_socket_id].controller_id){
+                        game_sockets[game_socket_id].socket.emit("health_update", health);
+                    }
+                });
+
             }else{
                 console.log("Controller attempted to connect but failed");
 
