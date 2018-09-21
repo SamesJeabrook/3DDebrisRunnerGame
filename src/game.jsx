@@ -293,7 +293,7 @@ class Game extends Component {
         rollingGroundSphere.rotation.x += rollingSpeed;
         
         var delta = clock.getDelta();
-        var movingDistance = 10 * delta;
+        var movingDistance = 5 * delta;
 
         let {controllerState} = this.props;
         if(controllerState.directionX == 'left'){
