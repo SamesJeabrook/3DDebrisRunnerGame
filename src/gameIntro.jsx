@@ -24,7 +24,8 @@ class GameIntro extends Component {
                         <div>
                             <h2>Control with phone</h2>
                             <span>Scan the QR code below to connect to the game with your phone and take control</span>
-                            <QRCode level={"L"} fgColor={"#000000"} value={`https://orbitaldebris.herokuapp.com/?id=${this.props.id}`} />
+                            {/* <QRCode level={"L"} fgColor={"#000000"} value={`https://orbitaldebris.herokuapp.com/?id=${this.props.id}`} /> */}
+                            <QRCode level={"L"} fgColor={"#000000"} value={`http://localhost:5050/?id=${this.props.id}`} />
                         </div>
                     )
             }

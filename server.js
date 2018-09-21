@@ -41,6 +41,11 @@ var express = require('express');
         })
         socket.emit("game_connected");
 
+        socket.on("start_game", function(){
+            console.log("Game started");
+            io.emit("game_started", true);
+        })
+
         socket.on('controller_connect', function(game_socket_id){
             if(game_sockets[game_socket_id] && !game_sockets[game_socket_id].controller_id){
                 console.log("Controller connected");
@@ -60,14 +65,6 @@ var express = require('express');
                     console.log(data);
                     if(game_sockets[game_socket_id]){
                         game_sockets[game_socket_id].socket.emit("controller_state_change", data)
-                    }
-                });
-
-                socket.on('update_health', function(health){
-                    console.log(health);
-                    socket.emit("health_update", health);
-                    if(game_sockets[game_socket_id] && !game_sockets[game_socket_id].controller_id){
-                        game_sockets[game_socket_id].socket.emit("health_update", health);
                     }
                 });
 

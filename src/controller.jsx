@@ -21,6 +21,7 @@ class Controller extends Component {
 
     setControllerStateLeftRight = this.setControllerStateLeftRight.bind(this);
     setControllerStateUpDown = this.setControllerStateUpDown.bind(this);
+    startGame = this.startGame.bind(this);
 
     setControllerStateUpDown(distance, direction){
         let controllerState = this.state.controllerState;
@@ -56,6 +57,10 @@ class Controller extends Component {
         this.props.io.emit('controller_state_change', controllerState);
     }
 
+    startGame(){
+        this.props.io.emit('start_game', true);
+    }
+
     componentDidMount(){
         console.log(this.props.io);
         window.addEventListener('devicemotion', this.deviceMotion, false);
@@ -69,6 +74,10 @@ class Controller extends Component {
             <div id="Controller">
                 <div className="controller-instructions">
                     <p>Use the control sticks to move up-down, left-right. Tilt the phone to roll.</p>
+                </div>
+
+                <div className="controller-start">
+                    <button id="startGame" onClick={this.startGame}>Start</button>
                 </div>
 
                 <div className="controller-wrapper left">

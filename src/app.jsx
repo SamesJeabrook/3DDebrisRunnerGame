@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 
 import OpenSocket from 'socket.io-client';
 
-const io = OpenSocket('https://orbitaldebris.herokuapp.com/');
+// const io = OpenSocket('https://orbitaldebris.herokuapp.com/');
+const io = OpenSocket('http://localhost:5050/');
 const currentURL = window.location.href;
 
 // components
@@ -23,7 +24,8 @@ class GameWrapper extends Component{
     controllerConnected: false,
     controllerState: {},
     runGame: false,
-    health: 100
+    health: 100,
+    gameStarted: false
   }
 
   componentDidMount(){
@@ -57,6 +59,12 @@ class GameWrapper extends Component{
         health: health
       })
     });
+    io.on('game_started', () => {
+      console.log("start game")
+      this.setState({
+        gameStarted: true
+      })
+    })
   }
 
   render(){
@@ -66,7 +74,8 @@ class GameWrapper extends Component{
       runGame,
       controllerConnected,
       controllerState,
-      health
+      health,
+      gameStarted
     } = this.state;
 
     if(currentURL.indexOf('?id=') > 0){
@@ -77,7 +86,7 @@ class GameWrapper extends Component{
     }else{
       // render game
       return(
-          <Game io={io} id={id} runGame={runGame} controllerConnected={controllerConnected} controllerState={controllerState} health={health} />
+          <Game io={io} id={id} runGame={runGame} gameStarted={gameStarted} controllerConnected={controllerConnected} controllerState={controllerState} health={health} />
       )
     }
   }

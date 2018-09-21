@@ -26,3 +26,17 @@ p{
 .controller-wrapper.right{
     right: 150px;
 }
+.controller-start{
+    position: absolute;
+    top: 50%;
+    left:0;
+    width: 100%;
+    text-align: center;
+}
+.controller-start button{
+    font-size: 20px;
+    padding: 10px 20px;
+    border: 1px solid #fff;
+    background: none;
+    color: #fff;
+}

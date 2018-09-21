@@ -37,6 +37,7 @@ const heroBaseY = 1.8;
 let clock;
 let debris;
 let game;
+let gameRunning = false;
 
 
 class Game extends Component {
@@ -294,7 +295,6 @@ class Game extends Component {
         var delta = clock.getDelta();
         var movingDistance = 10 * delta;
 
-        console.log(this.props.controllerState);
         let {controllerState} = this.props;
         if(controllerState.directionX == 'left'){
             if(hero.position.x > -6){
@@ -318,6 +318,7 @@ class Game extends Component {
                 hero.position.y -= movingDistance + (controllerState.distanceY/100)
             }
         }
+        console.log(hero.position)
 
         for (var vertexIndex = 0; vertexIndex < hero.geometry.vertices.length; vertexIndex++){      
             var localVertex = hero.geometry.vertices[vertexIndex].clone();
@@ -422,15 +423,21 @@ class Game extends Component {
     }
 
     render(){
-        let {id, controllerConnected} = this.props;
-        let {health} = this.props;
+        let {id,
+            controllerConnected,
+            health,
+            gameStarted
+        } = this.props;
 
         const renderGameIntro = () => {
-            if(!controllerConnected){
+            if(gameStarted && !gameRunning){
                 hero.position.y = 28.5;
+                gameRunning = true;
+            }
+            if(gameStarted){
                 return null;
             }
-            return <GameIntro id={id}/>;
+            return <GameIntro id={id} controllerConnected={controllerConnected}/>;
         }
         return(
             <div id="GameContainer">
