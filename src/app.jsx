@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import OpenSocket from 'socket.io-client';
 
-const io = OpenSocket('https://orbitaldebris.herokuapp.com/');
+const io = OpenSocket('http://localhost:5050');
 const currentURL = window.location.href;
 
 // components
@@ -52,6 +52,7 @@ class GameWrapper extends Component{
       })
     })
     io.on('health_update', (health) =>{
+      console.log(health)
       this.setState({
         health: health
       })

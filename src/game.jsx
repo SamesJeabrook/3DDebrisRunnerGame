@@ -294,6 +294,31 @@ class Game extends Component {
         var delta = clock.getDelta();
         var movingDistance = 10 * delta;
 
+        console.log(this.props.controllerState);
+        let {controllerState} = this.props;
+        if(controllerState.directionX == 'left'){
+            if(hero.position.x > -6){
+                hero.position.x -= movingDistance + controllerState.distanceX
+            }
+        }
+        if(controllerState.directionX == 'right'){
+            if(hero.position.x < 6){
+                hero.position.x += movingDistance + controllerState.distanceX
+            }
+        }
+
+        if(controllerState.directionY == 'up'){
+            if(hero.position.y > 32){
+                hero.position.y += movingDistance + controllerState.distanceY
+            }
+        }
+
+        if(controllerState.directionY == 'down'){
+            if(hero.position.y > 26.5){
+                hero.position.y -= movingDistance + controllerState.distanceY
+            }
+        }
+
         for (var vertexIndex = 0; vertexIndex < hero.geometry.vertices.length; vertexIndex++){      
             var localVertex = hero.geometry.vertices[vertexIndex].clone();
             var globalVertex = hero.matrix.multiplyVector3(localVertex);
@@ -304,12 +329,8 @@ class Game extends Component {
             if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) 
             {
                 console.log('BANG!')
-                // this.props.updateHealth(this.props.health );
-                console.log(this.props.health);
                 this.explode();
                 this.props.io.emit('update_health', this.props.health -1);
-                // var healthBar = document.querySelector('#healthBarContainer span');
-                // healthBar.style.width = this.props.health+'%';
             }
         }
         

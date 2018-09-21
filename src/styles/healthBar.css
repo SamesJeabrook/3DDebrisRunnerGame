@@ -30,3 +30,13 @@
     width: 100%;
     background: #ff0000;
 }
+
+#Controller #healthBarContainer .health_bar{
+    height: 10px;
+    position: relative;
+}
+
+#Controller #healthBarContainer .health_bar span{
+    position: absolute;
+    height: 10px;
+}

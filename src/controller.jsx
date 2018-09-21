@@ -15,15 +15,18 @@ import HealthBar from './healthBar.jsx';
 class Controller extends Component {
 
     state = {
-        controllerState: {}
+        controllerState: {},
+        health: 100
     }
 
     setControllerStateLeftRight = this.setControllerStateLeftRight.bind(this);
     setControllerStateUpDown = this.setControllerStateUpDown.bind(this);
 
-    setControllerStateUpDown(posY){
+    setControllerStateUpDown(distance, direction){
         let controllerState = this.state.controllerState;
-        controllerState.y = posY
+        controllerState.distanceY = distance;
+        controllerState.directionY = direction;
+        
         this.setState({
             controllerState: controllerState
         });
@@ -31,9 +34,10 @@ class Controller extends Component {
         console.log(this.state.controllerState);
     }
 
-    setControllerStateLeftRight(posX){
+    setControllerStateLeftRight(distance, direction){
         let controllerState = this.state.controllerState;
-        controllerState.x = posX
+        controllerState.distanceX = distance;
+        controllerState.directionX = direction;
         this.setState({
             controllerState: controllerState
         });
@@ -73,13 +77,15 @@ class Controller extends Component {
                 <div className="controller-wrapper left">
                     <ReactNipple
                         options={{ mode: 'static', lockY:true, multitouch: true,  position: { bottom: '10%', left: '20%' } }}
-                        onMove={(evt, data) => this.setControllerStateLeftRight(data.position.x)}
+                        onMove={
+                            (evt, data) => this.setControllerStateLeftRight(data.distance, data.direction.y)
+                        }
                     />
                 </div>
                 <div className="controller-wrapper right">
                     <ReactNipple 
                         options={{ mode: 'static', lockX:true, multitouch: true, position: { bottom: '10%', right: '20%' } }}
-                        onMove={(evt, data) => this.setControllerStateUpDown(data.position.y)}
+                        onMove={(evt, data) => this.setControllerStateUpDown(data.distance, data.direction.x)}
                     />
                 </div>
                 <HealthBar health={this.props.health}/>
