@@ -426,7 +426,7 @@ class Game extends Component {
         let {health} = this.props;
 
         const renderGameIntro = () => {
-            if(controllerConnected){
+            if(!controllerConnected){
                 hero.position.y = 28.5;
                 return null;
             }
