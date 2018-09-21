@@ -31,7 +31,6 @@ class Controller extends Component {
             controllerState: controllerState
         });
         this.emitUpdates(controllerState)
-        console.log(this.state.controllerState);
     }
 
     setControllerStateLeftRight(distance, direction){
@@ -42,7 +41,6 @@ class Controller extends Component {
             controllerState: controllerState
         });
         this.emitUpdates(controllerState)
-        console.log(this.state.controllerState);
     }
 
     deviceMotion(e){
@@ -52,7 +50,6 @@ class Controller extends Component {
             constrollerState: controllerState
         });
         this.emitUpdates(controllerState);
-        console.log(this.state.controllerState)
     }
 
     emitUpdates(controllerState){
@@ -77,15 +74,13 @@ class Controller extends Component {
                 <div className="controller-wrapper left">
                     <ReactNipple
                         options={{ mode: 'static', lockY:true, multitouch: true,  position: { bottom: '10%', left: '20%' } }}
-                        onMove={
-                            (evt, data) => this.setControllerStateLeftRight(data.distance, data.direction.y)
-                        }
+                        onMove={(evt, data) => this.setControllerStateLeftRight(data.distance, data.direction.x)}
                     />
                 </div>
                 <div className="controller-wrapper right">
                     <ReactNipple 
                         options={{ mode: 'static', lockX:true, multitouch: true, position: { bottom: '10%', right: '20%' } }}
-                        onMove={(evt, data) => this.setControllerStateUpDown(data.distance, data.direction.x)}
+                        onMove={(evt, data) => this.setControllerStateUpDown(data.distance, data.direction.y)}
                     />
                 </div>
                 <HealthBar health={this.props.health}/>
