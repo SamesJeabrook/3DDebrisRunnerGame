@@ -5,7 +5,10 @@
   "main": "scene.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack -w"
+    "dev": "webpack -w && node server.js",
+    "start" : "node server.js",
+    "build": "webpack",
+    "heroku-postbuild": "npm install && npm run build"
   },
   "repository": {
     "type": "git",
