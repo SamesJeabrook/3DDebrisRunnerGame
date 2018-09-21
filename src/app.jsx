@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import OpenSocket from 'socket.io-client';
 
-const io = OpenSocket('http://localhost:5050');
+const io = OpenSocket('https://orbitaldebris.herokuapp.com/');
 const currentURL = window.location.href;
 
 // components
@@ -15,7 +15,6 @@ import Controller from './controller.jsx';
 // styles
 
 import './styles/utils.css';
-import { isBoolean } from 'util';
 
 class GameWrapper extends Component{
 
