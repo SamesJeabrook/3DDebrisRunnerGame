@@ -308,7 +308,7 @@ class Game extends Component {
         }
 
         if(controllerState.directionY == 'up'){
-            if(hero.position.y > 32){
+            if(hero.position.y < 32){
                 hero.position.y += movingDistance + (controllerState.distanceY/100)
             }
         }
