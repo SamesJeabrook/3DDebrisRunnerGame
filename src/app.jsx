@@ -42,7 +42,7 @@ class GameWrapper extends Component{
       })
     });
     io.on('controller_state_change', (state) => {
-      console.log('controller state changed')
+      console.log('controller state changed', state)
       this.setState({
         controllerState : state
       })
