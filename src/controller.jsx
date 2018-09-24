@@ -16,11 +16,13 @@ class Controller extends Component {
 
     state = {
         controllerState: {},
-        health: 100
+        health: 100,
+        controllerOrigPos: {}
     }
 
     setControllerStateLeftRight = this.setControllerStateLeftRight.bind(this);
     setControllerStateUpDown = this.setControllerStateUpDown.bind(this);
+    setControllerState = this.setControllerState.bind(this);
     deviceMotion = this.deviceMotion.bind(this);
     startGame = this.startGame.bind(this);
 
@@ -28,6 +30,7 @@ class Controller extends Component {
         let controllerState = this.state.controllerState;
         controllerState.distanceY = distance;
         controllerState.directionY = direction;
+        console.log()
         
         this.setState({
             controllerState: controllerState
@@ -43,6 +46,17 @@ class Controller extends Component {
             controllerState: controllerState
         });
         this.emitUpdates(controllerState)
+    }
+
+    setControllerState(data){
+        let controllerState = this.state.controllerState;
+        controllerState.x = data.position.x - this.state.controllerOrigPos.x;
+        controllerState.y = data.position.y - this.state.controllerOrigPos.y;
+        console.log(controllerState);
+        this.setState({
+            controllerState: controllerState
+        });
+        this.emitUpdates(controllerState);
     }
 
     deviceMotion(e){
@@ -66,7 +80,14 @@ class Controller extends Component {
         console.log(this.props.io);
         window.addEventListener('devicemotion', this.deviceMotion, false);
         this.props.io.connect();
-        this.props.io.emit('controller_connect', this.props.gameId)
+        this.props.io.emit('controller_connect', this.props.gameId);
+        const DirectionsController = document.querySelector('.controller-wrapper.left');
+        this.setState({
+            controllerOrigPos: {
+                x: DirectionsController.offsetLeft,
+                y: DirectionsController.offsetTop
+            }
+        })
     }
 
     render(){
@@ -83,16 +104,16 @@ class Controller extends Component {
 
                 <div className="controller-wrapper left">
                     <ReactNipple
-                        options={{ mode: 'static', lockY:true, multitouch: true,  position: { bottom: '10%', left: '20%' } }}
-                        onMove={(evt, data) => this.setControllerStateUpDown(data.distance, data.direction.y)}
+                        options={{ mode: 'static',  multitouch: true,  position: { bottom: '0', left: '0' } }}
+                        onMove={(evt, data) => this.setControllerState(data)}
                     />
                 </div>
                 <div className="controller-wrapper right">
-                    <ReactNipple 
+                    {/* <ReactNipple 
                         options={{ mode: 'static', lockX:true, multitouch: true, position: { bottom: '10%', right: '20%' } }}
                         onMove={(evt, data) => this.setControllerStateLeftRight(data.distance, data.direction.x)}
                         onEnd={(evt, data) => console.log(data)}
-                    />
+                    /> */}
                 </div>
                 <HealthBar health={this.props.health}/>
             </div>

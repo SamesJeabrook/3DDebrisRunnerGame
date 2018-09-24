@@ -296,26 +296,27 @@ class Game extends Component {
         var movingDistance = delta;
 
         let {controllerState} = this.props;
-        if(controllerState.directionX == 'left'){
-            if(hero.position.x > -6){
-                hero.position.x -= movingDistance * (controllerState.distanceX/5)
-            }
-        }
-        if(controllerState.directionX == 'right'){
-            if(hero.position.x < 6){
-                hero.position.x += movingDistance * (controllerState.distanceX/5)
-            }
-        }
 
-        if(controllerState.directionY == 'up'){
+        if(controllerState.y > 0){ //left
             if(hero.position.y < 32){
-                hero.position.y += movingDistance * (controllerState.distanceY/5)
+                hero.position.y += movingDistance * (Math.abs(controllerState.y)/5)
+            }
+        }
+        if (controllerState.y < 0){ // right
+            if(hero.position.y > 26.5){
+                hero.position.y -= movingDistance * (Math.abs(controllerState.y)/5)
             }
         }
 
-        if(controllerState.directionY == 'down'){
-            if(hero.position.y > 26.5){
-                hero.position.y -= movingDistance * (controllerState.distanceY/5)
+        if(controllerState.x > 0){
+            if(hero.position.x < 6){
+                hero.position.x += movingDistance * (Math.abs(controllerState.x)/5)
+            }
+        }
+
+        if(controllerState.x < 0){
+            if(hero.position.x > -6){
+                hero.position.x -= movingDistance * (Math.abs(controllerState.x)/5)
             }
         }
 
