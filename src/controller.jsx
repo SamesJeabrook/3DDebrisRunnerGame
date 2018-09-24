@@ -47,7 +47,7 @@ class Controller extends Component {
 
     deviceMotion(e){
         let controllerState = this.state.controllerState;
-        controllerState.rotate = e.accelerationIncludingGravity.y / 10;
+        controllerState.rotate = e.accelerationIncludingGravity.y / 5;
         this.setState({
             constrollerState: controllerState
         });
