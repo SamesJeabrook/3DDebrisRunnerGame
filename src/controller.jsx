@@ -87,7 +87,9 @@ class Controller extends Component {
                 x: DirectionsController.offsetLeft,
                 y: DirectionsController.offsetTop
             }
-        })
+        });
+        lockOrientation = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation || screen.orientation.lock;
+        lockOrientation('landscape-primary');
     }
 
     render(){
