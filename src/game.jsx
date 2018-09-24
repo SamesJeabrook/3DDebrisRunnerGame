@@ -319,7 +319,7 @@ class Game extends Component {
             }
         }
 
-        hero.rotation.z = controllerState.rotate + 1.5;
+        hero.rotation.z = controllerState.rotate;
 
         for (var vertexIndex = 0; vertexIndex < hero.geometry.vertices.length; vertexIndex++){      
             var localVertex = hero.geometry.vertices[vertexIndex].clone();
