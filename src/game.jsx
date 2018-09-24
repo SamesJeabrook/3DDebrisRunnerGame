@@ -318,7 +318,6 @@ class Game extends Component {
                 hero.position.y -= movingDistance * (controllerState.distanceY/5)
             }
         }
-        console.log(hero.position)
 
         for (var vertexIndex = 0; vertexIndex < hero.geometry.vertices.length; vertexIndex++){      
             var localVertex = hero.geometry.vertices[vertexIndex].clone();

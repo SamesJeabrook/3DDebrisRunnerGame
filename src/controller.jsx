@@ -21,6 +21,7 @@ class Controller extends Component {
 
     setControllerStateLeftRight = this.setControllerStateLeftRight.bind(this);
     setControllerStateUpDown = this.setControllerStateUpDown.bind(this);
+    deviceMotion = this.deviceMotion.bind(this);
     startGame = this.startGame.bind(this);
 
     setControllerStateUpDown(distance, direction){
