@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A debris runner game using three.js",
   "main": "scene.js",
+  "engines": {
+    "node" : "10.10.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack -w && node server.js",
