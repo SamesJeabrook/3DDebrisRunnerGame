@@ -1,0 +1,18 @@
+/* game over */
+#ControllerDisconnectedContainer{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0,0,0,0.7);
+    text-align: center;
+}
+
+#ControllerDisconnectedContainer h3{
+    color: #ff0000;
+    font-size: 30px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
