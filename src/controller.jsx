@@ -94,15 +94,17 @@ class Controller extends Component {
 
     render(){
 
+        let {gameStarted} = this.props;
+
         return(
             <div id="Controller">
                 <div className="controller-instructions">
                     <p>Use the control sticks to move up-down, left-right. Tilt the phone to roll.</p>
                 </div>
 
-                <div className="controller-start">
+                { !gameStarted ? <div className="controller-start">
                     <button id="startGame" onClick={this.startGame}>Start</button>
-                </div>
+                </div> : null }
 
                 <div className="controller-wrapper left">
                     <ReactNipple

@@ -5,8 +5,10 @@ import React, {Component} from 'react';
 import GameIntro from './gameIntro.jsx';
 import GameOver from './gameOver.jsx';
 import HealthBar from './healthBar.jsx';
+import ControllerDisconnected from './controllerDisconnected.jsx';
 
 import * as THREE from '../three.min.js';
+
 
 let sceneWidth;
 let sceneHeight;
@@ -42,9 +44,14 @@ let gameRunning = false;
 
 class Game extends Component {
 
+    state = {
+        gameOver: false
+    }
+
     
     runVertObsticalLogic = this.runVertObsticalLogic.bind(this);
     runHorzObsticalLogic = this.runHorzObsticalLogic.bind(this);
+    handleGameRestart = this.handleGameRestart.bind(this);
     explosionLogic = this.explosionLogic.bind(this);
     addObsticals= this.addObsticals.bind(this);
     update = this.update.bind(this);
@@ -352,7 +359,9 @@ class Game extends Component {
         var game = requestAnimationFrame(this.update);
         if(this.props.health <= 0){
             cancelAnimationFrame( game );
-            document.getElementById('gameOver').style.display = 'block';
+            this.setState({
+                gameOver: true
+            });
         }
     }
 
@@ -424,12 +433,20 @@ class Game extends Component {
         this.runGame();
     }
 
+    handleGameRestart(e){
+        e.preventDefault();
+        health = 100;
+        hero.position.y = 28.5;
+        this.update();
+    }
+
     render(){
         let {id,
             controllerConnected,
             health,
             gameStarted
         } = this.props;
+        let {gameOver} = this.state;
 
         const renderGameIntro = () => {
             if(gameStarted && !gameRunning){
@@ -443,9 +460,10 @@ class Game extends Component {
         }
         return(
             <div id="GameContainer">
-                <GameOver />
+                {gameOver ? <GameOver restart={this.handleGameRestart} /> : null}
                 {id ? renderGameIntro() : null}
                 <HealthBar health={health} />
+                {!controllerConnected && gameStarted ? <ControllerDisconnected /> : null}
                 <div id="gameWrapper"></div>
             </div>
         )

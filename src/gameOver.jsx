@@ -10,7 +10,7 @@ class GameOver extends Component {
             <div id="gameOver">
                 <div className="game_over_container">
                     <h3>Game Over</h3><br/>
-                    <button id="playAgain">Play Again</button>
+                    <button id="playAgain" onClick={this.props.restart}>Play Again</button>
                 </div>
                 <span className="vertical_align"></span>
             </div>

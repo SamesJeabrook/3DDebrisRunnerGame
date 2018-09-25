@@ -35,10 +35,10 @@ class GameWrapper extends Component{
         id: io.id
       })
     });
-    io.on('controller_connected', () => {
+    io.on('controller_connected', (connected) => {
       console.log('controller connected')
       this.setState({
-        controllerConnected: true
+        controllerConnected: connected
       })
     });
     io.on('controller_state_change', (state) => {
@@ -81,7 +81,7 @@ class GameWrapper extends Component{
     if(currentURL.indexOf('?id=') > 0){
       // render controller
       return(
-        <Controller io={io} gameId={currentURL.split('?id=')[1]} health={health}/>
+        <Controller io={io} gameId={currentURL.split('?id=')[1]} gameStarted={gameStarted} health={health}/>
       )
     }else{
       // render game
