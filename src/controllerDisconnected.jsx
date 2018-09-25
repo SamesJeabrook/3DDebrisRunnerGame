@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 // styles
 
-import './styles/ControllerDisconnected.css';
+import './styles/controllerDisconnected.css';
 
 class ControllerDisconnected extends Component {
     render(){
