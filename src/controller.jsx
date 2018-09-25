@@ -99,12 +99,14 @@ class Controller extends Component {
         return(
             <div id="Controller">
                 <div className="controller-instructions">
-                    <p>Use the control sticks to move up-down, left-right. Tilt the phone to roll.</p>
+                    <p>Use the control stick to move up-down, left-right. Tilt the phone to roll.</p>
                 </div>
 
                 { !gameStarted ? <div className="controller-start">
                     <button id="startGame" onClick={this.startGame}>Start</button>
                 </div> : null }
+
+                { health <= 0 ? <h3> Game Over </h3> : null }
 
                 <div className="controller-wrapper left">
                     <ReactNipple

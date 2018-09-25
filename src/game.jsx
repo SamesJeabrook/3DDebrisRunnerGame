@@ -460,7 +460,7 @@ class Game extends Component {
         }
         return(
             <div id="GameContainer">
-                {gameOver ? <GameOver restart={this.handleGameRestart} /> : null}
+                {gameOver ? <GameOver /> : null}
                 {id ? renderGameIntro() : null}
                 <HealthBar health={health} />
                 {!controllerConnected && gameStarted ? <ControllerDisconnected /> : null}
