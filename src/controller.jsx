@@ -94,7 +94,7 @@ class Controller extends Component {
 
     render(){
 
-        let {gameStarted} = this.props;
+        let {gameStarted, health} = this.props;
 
         return(
             <div id="Controller">
@@ -121,7 +121,7 @@ class Controller extends Component {
                         onEnd={(evt, data) => console.log(data)}
                     /> */}
                 </div>
-                <HealthBar health={this.props.health}/>
+                <HealthBar health={health}/>
             </div>
         )
     }
