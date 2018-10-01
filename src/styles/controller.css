@@ -9,11 +9,13 @@ body{
 p{
     color: #fff;
     width: 100%;
-    margin-top: 50px;
     font-size: 20px;
     text-align: center;
     font-family: Helvetica, sans-serif;
     font-weight: 200;
+}
+p:first-child{
+    margin-top: 50px;
 }
 
 .controller-wrapper{
