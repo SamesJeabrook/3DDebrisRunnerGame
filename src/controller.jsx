@@ -79,10 +79,10 @@ class Controller extends Component {
                 x: DirectionsController.offsetLeft,
                 y: DirectionsController.offsetTop
             },
-            targetOrigPos: {
-                x: TargetController.offsetLeft,
-                y: TargetController.offsetTop
-            }
+            // targetOrigPos: {
+            //     x: TargetController.offsetLeft,
+            //     y: TargetController.offsetTop
+            // }
         });
         // lockOrientation = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation || screen.orientation.lock;
         // lockOrientation('landscape-primary');
@@ -111,12 +111,12 @@ class Controller extends Component {
                         onMove={(evt, data) => this.setControllerState(data)}
                     />
                 </div>
-                <div className="controller-wrapper right">
+                {/* <div className="controller-wrapper right">
                     <ReactNipple 
                         options={{ mode: 'static', multitouch: true, position: { bottom: '0', right: '0' } }}
                         onMove={(evt, data) => this.setTargetState(data)}
                     />
-                </div>
+                </div> */}
                 <HealthBar health={health}/>
             </div>
         )
