@@ -16,47 +16,34 @@ class Controller extends Component {
 
     state = {
         controllerState: {},
+        targetState: {},
         health: 100,
-        controllerOrigPos: {}
+        controllerOrigPos: {},
+        targetOrigPos: {}
     }
-
-    setControllerStateLeftRight = this.setControllerStateLeftRight.bind(this);
-    setControllerStateUpDown = this.setControllerStateUpDown.bind(this);
     setControllerState = this.setControllerState.bind(this);
+    setTargetState = this.setTargetState.bind(this);
     deviceMotion = this.deviceMotion.bind(this);
     startGame = this.startGame.bind(this);
-
-    setControllerStateUpDown(distance, direction){
-        let controllerState = this.state.controllerState;
-        controllerState.distanceY = distance;
-        controllerState.directionY = direction;
-        console.log()
-        
-        this.setState({
-            controllerState: controllerState
-        });
-        this.emitUpdates(controllerState)
-    }
-
-    setControllerStateLeftRight(distance, direction){
-        let controllerState = this.state.controllerState;
-        controllerState.distanceX = distance;
-        controllerState.directionX = direction;
-        this.setState({
-            controllerState: controllerState
-        });
-        this.emitUpdates(controllerState)
-    }
 
     setControllerState(data){
         let controllerState = this.state.controllerState;
         controllerState.x = data.position.x - this.state.controllerOrigPos.x;
         controllerState.y = data.position.y - this.state.controllerOrigPos.y;
-        console.log(controllerState);
         this.setState({
             controllerState: controllerState
         });
-        this.emitUpdates(controllerState);
+        this.emitControllerUpdates(controllerState);
+    }
+
+    setTargetState(data){
+        let targetState = this.state.targetState;
+        targetState.x = data.position.x - this.state.targetOrigPos.x;
+        targetState.y = data.position.y - this.state.targetOrigPos.y;
+        this.setState({
+            targetState: targetState
+        });
+        this.emitTargetUpdates(targetState);
     }
 
     deviceMotion(e){
@@ -65,11 +52,15 @@ class Controller extends Component {
         this.setState({
             constrollerState: controllerState
         });
-        this.emitUpdates(controllerState);
+        this.emitControllerUpdates(controllerState);
     }
 
-    emitUpdates(controllerState){
+    emitControllerUpdates(controllerState){
         this.props.io.emit('controller_state_change', controllerState);
+    }
+
+    emitTargetUpdates(targetState){
+        this.props.io.emit('target_state_change', targetState);
     }
 
     startGame(){
@@ -82,10 +73,15 @@ class Controller extends Component {
         this.props.io.connect();
         this.props.io.emit('controller_connect', this.props.gameId);
         const DirectionsController = document.querySelector('.controller-wrapper.left');
+        const TargetController = document.querySelector('.controller-wrapper.right');
         this.setState({
             controllerOrigPos: {
                 x: DirectionsController.offsetLeft,
                 y: DirectionsController.offsetTop
+            },
+            targetOrigPos: {
+                x: TargetController.offsetLeft,
+                y: TargetController.offsetTop
             }
         });
         // lockOrientation = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation || screen.orientation.lock;
@@ -99,7 +95,8 @@ class Controller extends Component {
         return(
             <div id="Controller">
                 <div className="controller-instructions">
-                    <p>Use the control stick to move up-down, left-right. Tilt the phone to roll.</p>
+                    <p>Use the left control stick to moveTilt the phone to roll.</p>
+                    <p>Use the right control stick to target.</p>
                 </div>
 
                 { !gameStarted ? <div className="controller-start">
@@ -115,11 +112,10 @@ class Controller extends Component {
                     />
                 </div>
                 <div className="controller-wrapper right">
-                    {/* <ReactNipple 
-                        options={{ mode: 'static', lockX:true, multitouch: true, position: { bottom: '10%', right: '20%' } }}
-                        onMove={(evt, data) => this.setControllerStateLeftRight(data.distance, data.direction.x)}
-                        onEnd={(evt, data) => console.log(data)}
-                    /> */}
+                    <ReactNipple 
+                        options={{ mode: 'static', multitouch: true, position: { bottom: '0', right: '0' } }}
+                        onMove={(evt, data) => this.setTargetState(data)}
+                    />
                 </div>
                 <HealthBar health={health}/>
             </div>

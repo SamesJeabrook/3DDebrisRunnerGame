@@ -66,6 +66,14 @@ var express = require('express');
                     if(game_sockets[game_socket_id]){
                         game_sockets[game_socket_id].socket.emit("controller_state_change", data)
                     }
+                    console.log(data)
+                });
+
+                socket.on('target_state_change', function(data){
+                    if(game_sockets[game_socket_id]){
+                        game_sockets[game_socket_id].socket.emit("target_state_change", data)
+                    }
+                    console.log(data);
                 });
 
             }else{

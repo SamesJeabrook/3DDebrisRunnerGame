@@ -23,6 +23,7 @@ class GameWrapper extends Component{
     id: null,
     controllerConnected: false,
     controllerState: {},
+    targetState: {},
     runGame: false,
     health: 100,
     gameStarted: false
@@ -45,6 +46,11 @@ class GameWrapper extends Component{
       // console.log('controller state changed', state)
       this.setState({
         controllerState : state
+      })
+    });
+    io.on('target_state_change', (state) => {
+      this.setState({
+        targetState : state
       })
     });
     io.on('game_connected', () => {
@@ -74,6 +80,7 @@ class GameWrapper extends Component{
       runGame,
       controllerConnected,
       controllerState,
+      targetState,
       health,
       gameStarted
     } = this.state;
@@ -86,7 +93,7 @@ class GameWrapper extends Component{
     }else{
       // render game
       return(
-          <Game io={io} id={id} runGame={runGame} gameStarted={gameStarted} controllerConnected={controllerConnected} controllerState={controllerState} health={health} />
+          <Game io={io} id={id} runGame={runGame} gameStarted={gameStarted} controllerConnected={controllerConnected} controllerState={controllerState} targetState={targetState} health={health} />
       )
     }
   }

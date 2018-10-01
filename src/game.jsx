@@ -9,6 +9,8 @@ import ControllerDisconnected from './controllerDisconnected.jsx';
 
 import * as THREE from '../three.min.js';
 
+import CrossHairImg from './images/crossHair.png';
+
 
 let sceneWidth;
 let sceneHeight;
@@ -21,6 +23,7 @@ let ground;
 
 let rollingGroundSphere;
 let hero;
+let crossHair;
 let wallVertObsticals;
 let wallHorzObsticals;
 let currentVertObsticals;
@@ -40,6 +43,9 @@ let clock;
 let debris;
 let game;
 let gameRunning = false;
+
+let crossHairImg = new Image();
+crossHairImg.src = CrossHairImg;
 
 
 class Game extends Component {
@@ -91,6 +97,7 @@ class Game extends Component {
         this.createWorld();
         this.createLight();
         this.addExplosion();
+        crossHairImg.onLoad = this.createCrossHair();
         
 
         camera.position.z = 6.5;
@@ -214,6 +221,16 @@ class Game extends Component {
         return wall;
     }
 
+    createCrossHair(){
+        var texture = new THREE.Texture();
+        texture.image = crossHairImg;
+        texture.needsUpdate = true;
+        var material = new THREE.SpriteMaterial({ map : texture });
+        crossHair = new THREE.Sprite( material );
+        scene.add( crossHair );
+        crossHair.position.set(0,30,1);
+    }
+
     addVertWall(row){
         var newWall;
         if(wallVertObsticals.length == 0) return;
@@ -302,8 +319,9 @@ class Game extends Component {
         var delta = clock.getDelta();
         var movingDistance = delta;
 
-        let {controllerState} = this.props;
+        let {controllerState, targetState} = this.props;
 
+        // controller state
         if(controllerState.y > 0){ //left
             if(hero.position.y < 32){
                 hero.position.y += movingDistance * (Math.abs(controllerState.y)/5)
@@ -317,17 +335,40 @@ class Game extends Component {
 
         if(controllerState.x > 0){
             if(hero.position.x < 6){
-                hero.position.x += movingDistance * (Math.abs(controllerState.x)/5)
+                hero.position.x += movingDistance * (Math.abs(targetState.x)/5)
             }
         }
 
         if(controllerState.x < 0){
             if(hero.position.x > -6){
-                hero.position.x -= movingDistance * (Math.abs(controllerState.x)/5)
+                hero.position.x -= movingDistance * (Math.abs(targetState.x)/5)
+            }
+        }
+        hero.rotation.z = controllerState.rotate;
+
+        // Target State
+        if(targetState.y > 0){ //left
+            if(crossHair.position.y < 32){
+                crossHair.position.y += movingDistance * (Math.abs(targetState.y)/5)
+            }
+        }
+        if (targetState.y < 0){ // right
+            if(crossHair.position.y > 26.5){
+                crossHair.position.y -= movingDistance * (Math.abs(targetState.y)/5)
             }
         }
 
-        hero.rotation.z = controllerState.rotate;
+        if(targetState.x > 0){
+            if(crossHair.position.x < 6){
+                crossHair.position.x += movingDistance * (Math.abs(targetState.x)/5)
+            }
+        }
+
+        if(targetState.x < 0){
+            if(crossHair.position.x > -6){
+                crossHair.position.x -= movingDistance * (Math.abs(targetState.x)/5)
+            }
+        }
 
         for (var vertexIndex = 0; vertexIndex < hero.geometry.vertices.length; vertexIndex++){      
             var localVertex = hero.geometry.vertices[vertexIndex].clone();
