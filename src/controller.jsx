@@ -94,10 +94,10 @@ class Controller extends Component {
 
         return(
             <div id="Controller">
-                <div className="controller-instructions">
+                {/* <div className="controller-instructions">
                     <p>Use the left control stick to moveTilt the phone to roll.</p>
                     <p>Use the right control stick to target.</p>
-                </div>
+                </div> */}
 
                 { !gameStarted ? <div className="controller-start">
                     <button id="startGame" onClick={this.startGame}>Start</button>
