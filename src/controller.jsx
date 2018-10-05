@@ -103,7 +103,7 @@ class Controller extends Component {
                     <button id="startGame" onClick={this.startGame}>Start</button>
                 </div> : null }
 
-                { health <= 0 ? <h3> Game Over </h3> : null }
+                { health <= 0 ? <h1 className="game-over"> Game Over </h1> : null }
 
                 <div className="controller-wrapper left">
                     <ReactNipple

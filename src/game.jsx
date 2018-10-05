@@ -19,7 +19,6 @@ let scene;
 let renderer;
 let dom;
 let sun;
-let ground;
 
 let rollingGroundSphere;
 let hero;
@@ -38,14 +37,14 @@ const worldRadius = 50;
 const wallReleaseInterval=0.5;
 let sphericalHelper;
 let pathAnglesValues;
-const heroBaseY = 1.8;
 let clock;
-let debris;
-let game;
 let gameRunning = false;
 
 let crossHairImg = new Image();
 crossHairImg.src = CrossHairImg;
+
+let bulletsMax = 50;
+let bullets = [];
 
 
 class Game extends Component {
@@ -228,7 +227,7 @@ class Game extends Component {
         var material = new THREE.SpriteMaterial({ map : texture });
         crossHair = new THREE.Sprite( material );
         scene.add( crossHair );
-        crossHair.position.set(0,30,1);
+        crossHair.position.set(0,30,0);
     }
 
     addVertWall(row){
@@ -384,6 +383,17 @@ class Game extends Component {
                 this.props.io.emit('update_health', this.props.health -1);
             }
         }
+
+        var ray = new THREE.Raycaster();
+        var crossHairClone = crossHair.position.clone();
+        var coards = {};
+        coards.x = crossHairClone.x
+        coards.y = crossHairClone.y
+        ray.setFromCamera(coards, camera);
+        var collisionResults = ray.intersectObjects( collidableMeshList );
+        if ( collisionResults.length > 0 ) {
+            console.log('Target Hit!', collisionResults)
+        }
         
         if(clock.getElapsedTime()>wallReleaseInterval){
             clock.start();
@@ -459,6 +469,33 @@ class Game extends Component {
             particles.visible=false;
         }
         particleGeometry.verticesNeedUpdate = true;
+    }
+
+    shoot(){
+        var bullet;
+        if(bullets.length > 0){
+            bullet = bullets.pop();
+            bullet.position(hero.position())
+            scene.add(bullet);
+        }
+    }
+
+    creatBullet(){
+        var bulletGeo = new THREE.sphereGeometry(0.05, 8, 8);
+        var bulletMat = new THREE.MeshStandardMaterial({color: 0Xff0000})
+        var bullet = new THREE.Mesh(bulletGeo, bulletMat);
+        bullet.recieveShadow = false;
+        bullet.castShadow = true;
+        return bullet;
+
+    }
+
+    createBullets(){
+        var newBullet;
+        for(var i=0; i<bullets; i++){
+            newBullet = this.creatBullet();
+            bullets.push(newBullet);
+        }
     }
 
     onWindowResize(){
