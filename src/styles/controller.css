@@ -46,3 +46,27 @@ p:first-child{
     background: none;
     color: #fff;
 }
+.crack1{
+    position: absolute;
+    top: 0;
+    left: 40%;
+    height: 300px;
+    width: 300px;
+    z-index: 0;
+}
+.crack2{
+    position: absolute;
+    bottom: 25px;
+    right: 0;
+    height: 300px;
+    width: 300px;
+    z-index: 0;
+}
+.crack3{
+    position: absolute;
+    bottom: 25px;
+    left: 0;
+    height: 200px;
+    width: 400px;
+    z-index: 0;
+}

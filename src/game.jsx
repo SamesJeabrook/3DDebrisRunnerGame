@@ -23,6 +23,7 @@ let sun;
 let rollingGroundSphere;
 let hero;
 let crossHair;
+let enemy;
 let wallVertObsticals;
 let wallHorzObsticals;
 let currentVertObsticals;
@@ -83,6 +84,8 @@ class Game extends Component {
         scene = new THREE.Scene();
         scene.fog = new THREE.FogExp2(0xf0fff0, 0.05);
         camera = new THREE.PerspectiveCamera(100, sceneWidth / sceneHeight, 0.1, 1000);
+        camera.position.z = 6.5;
+        camera.position.y = 30;
         renderer = new THREE.WebGLRenderer({alpha:true});
         renderer.setClearColor(0xfffafa, 1);
         renderer.shadowMap.enabled = true;
@@ -96,11 +99,12 @@ class Game extends Component {
         this.createWorld();
         this.createLight();
         this.addExplosion();
+        this.createEnemy();
         crossHairImg.onLoad = this.createCrossHair();
         
 
-        camera.position.z = 6.5;
-        camera.position.y = 30; //27.5;
+        // camera.position.z = 6.5;
+        // camera.position.y = 30; //27.5;
         // camera.lookAt(scene.position)
 
         window.addEventListener('resize', this.onWindowResize, false);
@@ -229,6 +233,48 @@ class Game extends Component {
         scene.add( crossHair );
         crossHair.position.set(0,30,0);
     }
+
+    createEnemy(){
+        var enemyGeo = new THREE.BoxGeometry(3,3,3);
+        var enemyMat = new THREE.MeshStandardMaterial({color: 0xFF0000})
+        enemy = new THREE.Mesh(enemyGeo, enemyMat);
+        enemy.position.y = 30;
+        enemy.position.x = -7;
+        enemy.position.z = -7;
+        scene.add( enemy )
+    }
+
+    drawRaycastLine(raycaster) {
+        let material = new THREE.LineBasicMaterial({
+          color: 0xff0000,
+          linewidth: 10
+        });
+        let geometry = new THREE.Geometry();
+        let startVec = new THREE.Vector3(
+          raycaster.ray.origin.x,
+          raycaster.ray.origin.y,
+          raycaster.ray.origin.z);
+    
+        let endVec = new THREE.Vector3(
+          raycaster.ray.direction.x,
+          raycaster.ray.direction.y,
+          raycaster.ray.direction.z);
+        
+        // could be any number
+        endVec.multiplyScalar(5000);
+        
+        // get the point in the middle
+        let midVec = new THREE.Vector3();
+        midVec.lerpVectors(startVec, endVec, 0.5);
+    
+        geometry.vertices.push(startVec);
+        geometry.vertices.push(midVec);
+        geometry.vertices.push(endVec);
+    
+    
+        let line = new THREE.Line(geometry, material);
+        scene.add(line);
+      }
 
     addVertWall(row){
         var newWall;
@@ -369,6 +415,8 @@ class Game extends Component {
             }
         }
 
+        enemy.position.x += movingDistance;
+
         for (var vertexIndex = 0; vertexIndex < hero.geometry.vertices.length; vertexIndex++){      
             var localVertex = hero.geometry.vertices[vertexIndex].clone();
             var globalVertex = hero.matrix.multiplyVector3(localVertex);
@@ -384,16 +432,19 @@ class Game extends Component {
             }
         }
 
-        var ray = new THREE.Raycaster();
-        var crossHairClone = crossHair.position.clone();
-        var coards = {};
-        coards.x = crossHairClone.x
-        coards.y = crossHairClone.y
-        ray.setFromCamera(coards, camera);
-        var collisionResults = ray.intersectObjects( collidableMeshList );
-        if ( collisionResults.length > 0 ) {
-            console.log('Target Hit!', collisionResults)
+        var vector = new THREE.Vector3(crossHair.position.x, crossHair.position.y, crossHair.position.z);
+        var targetRay = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+        this.drawRaycastLine(targetRay);
+        var enemyHit = targetRay.intersectObject( enemy );
+        scene.updateMatrixWorld();
+
+        if ( enemyHit.length > 0 ) {
+            this.shoot(enemyHit[0].point);
         }
+
+        bullets.forEach(bullet => {
+            bullet.position.addScaledVector(bullet.userData.direction, bullet.userData.speed * delta);
+        })
         
         if(clock.getElapsedTime()>wallReleaseInterval){
             clock.start();
@@ -471,31 +522,17 @@ class Game extends Component {
         particleGeometry.verticesNeedUpdate = true;
     }
 
-    shoot(){
-        var bullet;
-        if(bullets.length > 0){
-            bullet = bullets.pop();
-            bullet.position(hero.position())
-            scene.add(bullet);
-        }
-    }
-
-    creatBullet(){
-        var bulletGeo = new THREE.sphereGeometry(0.05, 8, 8);
-        var bulletMat = new THREE.MeshStandardMaterial({color: 0Xff0000})
+    shoot(target){
+        var bulletGeo = new THREE.SphereGeometry(0.05, 8, 8);
+        var bulletMat = new THREE.MeshBasicMaterial({color: 0Xff0000})
         var bullet = new THREE.Mesh(bulletGeo, bulletMat);
         bullet.recieveShadow = false;
         bullet.castShadow = true;
-        return bullet;
-
-    }
-
-    createBullets(){
-        var newBullet;
-        for(var i=0; i<bullets; i++){
-            newBullet = this.creatBullet();
-            bullets.push(newBullet);
-        }
+        bullet.position.copy(hero.position);
+        bullet.userData.direction = target.sub(hero.position).normalize();
+        bullet.userData.speed = 20;
+        bullets.push(bullet);
+        scene.add(bullet);
     }
 
     onWindowResize(){
@@ -534,7 +571,8 @@ class Game extends Component {
             if(gameStarted){
                 return null;
             }
-            return <GameIntro id={id} controllerConnected={controllerConnected}/>;
+            // return <GameIntro id={id} controllerConnected={controllerConnected}/>;
+            return null
         }
         return(
             <div id="GameContainer">

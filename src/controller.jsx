@@ -11,6 +11,10 @@ import './styles/controller.css';
 import 'react-nipple/lib/styles.css';
 import HealthBar from './healthBar.jsx';
 
+import Crack1Img from './images/crack1.png';
+import Crack2Img from './images/crack2.png';
+import Crack3Img from './images/crack3.png';
+
 
 class Controller extends Component {
 
@@ -94,10 +98,10 @@ class Controller extends Component {
 
         return(
             <div id="Controller">
-                {/* <div className="controller-instructions">
-                    <p>Use the left control stick to moveTilt the phone to roll.</p>
-                    <p>Use the right control stick to target.</p>
-                </div> */}
+
+                {health < 75 ? <div className="crack1"><img src={Crack1Img} alt=""/></div> : null }
+                {health < 50 ? <div className="crack2"><img src={Crack2Img} alt=""/></div> : null }
+                {health < 25 ? <div className="crack3"><img src={Crack3Img} alt=""/></div> : null }
 
                 { !gameStarted ? <div className="controller-start">
                     <button id="startGame" onClick={this.startGame}>Start</button>
