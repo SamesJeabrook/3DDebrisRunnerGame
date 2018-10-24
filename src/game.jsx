@@ -24,6 +24,7 @@ let rollingGroundSphere;
 let hero;
 let crossHair;
 let enemy;
+let enemyDirection = 'right';
 let wallVertObsticals;
 let wallHorzObsticals;
 let currentVertObsticals;
@@ -46,6 +47,7 @@ crossHairImg.src = CrossHairImg;
 
 let bulletsMax = 50;
 let bullets = [];
+let enemyBullets = [];
 
 
 class Game extends Component {
@@ -100,6 +102,8 @@ class Game extends Component {
         this.createLight();
         this.addExplosion();
         this.createEnemy();
+        this.addEnemyAi();
+        this.enemyShot(hero.position);
         crossHairImg.onLoad = this.createCrossHair();
         
 
@@ -237,13 +241,27 @@ class Game extends Component {
     }
 
     createEnemy(){
-        var enemyGeo = new THREE.BoxGeometry(3,3,3);
+        var enemyGeo = new THREE.BoxGeometry(2,1,2);
         var enemyMat = new THREE.MeshStandardMaterial({color: 0xFF0000})
         enemy = new THREE.Mesh(enemyGeo, enemyMat);
         enemy.position.y = 30;
         enemy.position.x = -7;
         enemy.position.z = -7;
+        enemy.health = 100;
+        enemy.name="Bad Guy"
         scene.add( enemy )
+    }
+
+    setEnemyDirection(){
+        const Directions = ['left', 'right', 'up', 'down'];
+        const Direction = Directions[Math.floor(Math.random() * Directions.length)]
+        return (Direction);
+    }
+
+    addEnemyAi(){
+        setInterval(() => {
+            enemyDirection = this.setEnemyDirection();
+        }, 3000);
     }
 
     drawRaycastLine(raycaster) {
@@ -324,7 +342,7 @@ class Game extends Component {
             particleGeometry.vertices.push(vertex);
         }
         var pMaterial = new THREE.ParticleBasicMaterial({
-            color: 0xfffafa,
+            color: 0xff0000,
             size: 0.2
         });
         particles = new THREE.Points(particleGeometry, pMaterial);
@@ -338,16 +356,17 @@ class Game extends Component {
         hero = new THREE.Mesh(heroGeo, heroMat);
         hero.recieveShadow= false;
         hero.castShadow = true;
-        scene.add(hero);
+        hero.name = "Hero"
+        scene.add( hero );
         hero.position.y = 50; /*28.5*/
         hero.position.z = 1.5;
         hero.position.x = 0;
     }
 
-    explode(){
-        particles.position.y = hero.position.y;
-        particles.position.z = hero.position.z;
-        particles.position.x = hero.position.x;
+    explode(object){
+        particles.position.y = object.position.y;
+        particles.position.z = object.position.z;
+        particles.position.x = object.position.x;
         for(var i = 0; i < particleCount; i++){
             var vertex = new THREE.Vector3();
             vertex.x = -0.2+Math.random() * 0.4;
@@ -391,7 +410,9 @@ class Game extends Component {
                 hero.position.x -= movingDistance * (Math.abs(targetState.x)/5)
             }
         }
-        hero.rotation.z = controllerState.rotate;
+        if(controllerState && controllerState.rotate){
+            hero.rotation.z = controllerState.rotate;
+        }
 
         // Target State
         if(targetState.y > 0){ //left
@@ -417,7 +438,19 @@ class Game extends Component {
             }
         }
 
-        enemy.position.x += movingDistance;
+        if(enemyDirection == 'left' && enemy.position.x > -6){
+            enemy.position.x -= movingDistance + 0.05;
+        }else if(enemyDirection == 'right' && enemy.position.x < 6){
+            enemy.position.x += movingDistance + 0.05;
+        }else if(enemyDirection == 'up' && enemy.position.y < 32){
+            enemy.position.y += movingDistance + 0.05;
+        }else if(enemyDirection == 'down' && enemy.position.y > 26.5){
+            enemy.position.y -= movingDistance + 0.05;
+        }else{
+            enemyDirection = this.setEnemyDirection();
+        }
+
+        // collisions with walls for hero
 
         for (var vertexIndex = 0; vertexIndex < hero.geometry.vertices.length; vertexIndex++){      
             var localVertex = hero.geometry.vertices[vertexIndex].clone();
@@ -429,7 +462,7 @@ class Game extends Component {
             if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) 
             {
                 console.log('BANG!')
-                this.explode();
+                this.explode(hero);
                 this.props.io.emit('update_health', this.props.health -1);
             }
         }
@@ -445,36 +478,44 @@ class Game extends Component {
             this.shoot(enemyHit[0].point);
         }
 
-        // if ( wallHit.length > 0 ) {
-        //     this.shoot(wallHit[0].point);
-        // }
+        
+
+        enemyBullets.forEach(enemyBullet => {
+            enemyBullet.position.addScaledVector(enemyBullet.userData.direction, enemyBullet.userData.speed * delta);
+            var bulletBB = new THREE.Box3().setFromObject(enemyBullet);
+            var heroBB = new THREE.Box3().setFromObject(hero);
+            var bulletCollision = bulletBB.isIntersectionBox(heroBB);
+            
+            if(bulletCollision){
+                enemyBullets.splice(enemyBullets.indexOf(enemyBullet), 1);
+                scene.remove(enemyBullet);
+                this.explode(hero)
+                this.props.io.emit('update_health', this.props.health -5);
+                console.log('Hit Hero!', this.props.health);
+            }
+        })
 
         bullets.forEach(bullet => {
+            // bullet speed and direction
             bullet.position.addScaledVector(bullet.userData.direction, bullet.userData.speed * delta);
-
-            // for (var vertexIndex = 0; vertexIndex < bullet.geometry.vertices.length; vertexIndex++){      
-                // var localVertex = bullet.geometry.vertices[0].clone();
-                // var globalVertex = bullet.matrix.multiplyVector3(localVertex);
-                // var directionVector = globalVertex.sub( bullet.position );
-    
-                // var ray = new THREE.Raycaster( bullet.position, directionVector.clone().normalize() );
-                // var collisionResults = ray.intersectObjects( collidableMeshList );
-                // if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) 
-                // {
-                //     console.log('Bullet Hit!')
-                //     scene.remove(bullet);
-                // }
-            // }
-
+            // bullet collision
             var bulletBB = new THREE.Box3().setFromObject(bullet);
             var enemyBB = new THREE.Box3().setFromObject(enemy);
             var bulletCollision = bulletBB.isIntersectionBox(enemyBB);
-            if(bulletCollision){
-                console.log('Hit Enemy!');
+            
+            if(bulletCollision && scene.getObjectByName('Bad Guy')){
                 bullets.splice(bullets.indexOf(bullet), 1);
                 scene.remove(bullet);
+                this.explode(enemy)
+                enemy.health -= 5;
+                console.log('Hit Enemy!', enemy.health);
             }
         });
+
+        // remove enemy when dead
+        if(enemy.health <= 0){
+            scene.remove(enemy);
+        }
         
         if(clock.getElapsedTime()>wallReleaseInterval){
             clock.start();
@@ -562,7 +603,7 @@ class Game extends Component {
         bullet.castShadow = true;
         bullet.position.copy(hero.position);
         bullet.userData.direction = target.sub(hero.position).normalize();
-        bullet.userData.speed = 20;
+        bullet.userData.speed = 50;
         if(bullets.length < 10){
             bullets.push(bullet);
             scene.add(bullet);
@@ -571,6 +612,28 @@ class Game extends Component {
                 bullets.splice(bullets.indexOf(bullet), 1)
             }, 10000);
         }
+    }
+
+    enemyShot(target){
+        setInterval(() => {
+            var targetClone = target.clone()
+            var enemyBulletGeo = new THREE.SphereGeometry(0.05, 8, 8);
+            var enemyBulletMat = new THREE.MeshBasicMaterial({color: 0Xff0000})
+            var enemyBullet = new THREE.Mesh(enemyBulletGeo, enemyBulletMat);
+            enemyBullet.recieveShadow = false;
+            enemyBullet.castShadow = true;
+            enemyBullet.position.copy(enemy.position);
+            console.log(enemyBullet.position)
+            let point = hero.position.clone();
+            enemyBullet.userData.direction = targetClone.sub(enemy.position).normalize();
+            enemyBullet.userData.speed = 20;
+            enemyBullets.push(enemyBullet);
+            scene.add(enemyBullet);
+            setTimeout(() => {
+                scene.remove(enemyBullet);
+                enemyBullets.splice(enemyBullets.indexOf(enemyBullet), 1)
+            }, 10000);
+        }, 500)
     }
 
     onWindowResize(){
