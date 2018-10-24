@@ -93,7 +93,7 @@ class GameWrapper extends Component{
     }else{
       // render game
       return(
-          <Game io={io} id={id} runGame={runGame} gameStarted={gameStarted} controllerConnected={controllerConnected} controllerState={controllerState} targetState={targetState} health={health} />
+        <Game io={io} id={id} runGame={runGame} gameStarted={gameStarted} controllerConnected={controllerConnected} controllerState={controllerState} targetState={targetState} health={health} />
       )
     }
   }

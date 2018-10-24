@@ -209,6 +209,7 @@ class Game extends Component {
         wall.recieveShadow = false;
         wall.castShadow = true;
         wall.position.y = 0.9;
+        wall.health = 50;
         // wall.rotation.y = (Math.random() * (Math.PI));
         return wall;
     }
@@ -221,6 +222,7 @@ class Game extends Component {
         wall.castShadow = true;
         wall.position.x = 52; // handles how high of the ground this needs to be, no less than 50 no more than 60
         wall.rotation.x = 110;
+        wall.health = 50;
         return wall;
     }
 
@@ -436,15 +438,43 @@ class Game extends Component {
         var targetRay = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
         this.drawRaycastLine(targetRay);
         var enemyHit = targetRay.intersectObject( enemy );
+        // var wallHit = targetRay.intersectObjects( collidableMeshList );
         scene.updateMatrixWorld();
 
         if ( enemyHit.length > 0 ) {
             this.shoot(enemyHit[0].point);
         }
 
+        // if ( wallHit.length > 0 ) {
+        //     this.shoot(wallHit[0].point);
+        // }
+
         bullets.forEach(bullet => {
             bullet.position.addScaledVector(bullet.userData.direction, bullet.userData.speed * delta);
-        })
+
+            // for (var vertexIndex = 0; vertexIndex < bullet.geometry.vertices.length; vertexIndex++){      
+                // var localVertex = bullet.geometry.vertices[0].clone();
+                // var globalVertex = bullet.matrix.multiplyVector3(localVertex);
+                // var directionVector = globalVertex.sub( bullet.position );
+    
+                // var ray = new THREE.Raycaster( bullet.position, directionVector.clone().normalize() );
+                // var collisionResults = ray.intersectObjects( collidableMeshList );
+                // if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) 
+                // {
+                //     console.log('Bullet Hit!')
+                //     scene.remove(bullet);
+                // }
+            // }
+
+            var bulletBB = new THREE.Box3().setFromObject(bullet);
+            var enemyBB = new THREE.Box3().setFromObject(enemy);
+            var bulletCollision = bulletBB.isIntersectionBox(enemyBB);
+            if(bulletCollision){
+                console.log('Hit Enemy!');
+                bullets.splice(bullets.indexOf(bullet), 1);
+                scene.remove(bullet);
+            }
+        });
         
         if(clock.getElapsedTime()>wallReleaseInterval){
             clock.start();
@@ -485,6 +515,7 @@ class Game extends Component {
             currentVertObsticals.splice(fromWhere, 1);
             wallVertObsticals.push(oneWall);
             oneWall.visible=false;
+            collidableMeshList.splice(collidableMeshList.indexOf(oneWall));
         })
     }
 
@@ -506,6 +537,7 @@ class Game extends Component {
             currentHorzObsticals.splice(fromWhere, 1);
             wallHorzObsticals.push(oneWall);
             oneWall.visible=false;
+            collidableMeshList.splice(collidableMeshList.indexOf(oneWall));
         })
     }
 
@@ -531,8 +563,14 @@ class Game extends Component {
         bullet.position.copy(hero.position);
         bullet.userData.direction = target.sub(hero.position).normalize();
         bullet.userData.speed = 20;
-        bullets.push(bullet);
-        scene.add(bullet);
+        if(bullets.length < 10){
+            bullets.push(bullet);
+            scene.add(bullet);
+            setTimeout(() => {
+                scene.remove(bullet);
+                bullets.splice(bullets.indexOf(bullet), 1)
+            }, 10000);
+        }
     }
 
     onWindowResize(){
